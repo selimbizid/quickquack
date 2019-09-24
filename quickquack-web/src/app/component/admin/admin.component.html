@@ -1,0 +1,90 @@
+<div class="component container">
+    <div class="row">
+        <a role="button" class="btn btn-default col-lg-6" [class.active]="mode == 1" (click)="loadActivity(true)"><h4>Aktivität</h4></a>
+        <a role="button" class="btn btn-default col-lg-6" [class.active]="mode == 2" (click)="loadUsers()"><h4>Benutzerliste</h4></a>
+    </div>
+    <br><br>
+    <section class="well" *ngIf="validList()">
+        <ng-template ngFor let-line [ngForOf]="list" [ngForTrackBy]="trackList">
+            <p>{{ line }}</p>
+        </ng-template>
+        <br>
+        <button class="btn btn-default" (click)="loadActivity()">Mehr laden...</button>
+    </section>
+    <section class="well" *ngIf="validUserList()">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Rollen</th>
+                    <th>Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+            <ng-template ngFor let-user [ngForOf]="userList">
+                         <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <ng-template ngFor let-role [ngForOf]="user.roles">
+                            {{ role }} 
+                        </ng-template>
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-default" (click)="visitProfile(user.id)">Profil anzeigen</button>
+                        <button class="btn btn-sm btn-default" *ngIf="manageRoles" (click)="setRoleCandidate(user)" data-toggle="modal" data-target="#rolesModal">Rolle hinzufügen/löschen</button>
+                        <button class="btn btn-sm" *ngIf="canBeLocked(user)" [ngClass]="{'btn-danger' : user.active, 'btn-success' : !user.active}" (click)="setBlockCandidate(user)" data-toggle="modal" data-target="#accountLockModal">Konto {{ user.active ? 'sperren' : 'entsperren'}}</button>
+                    </td>
+                </tr>
+            </ng-template>
+            </tbody>
+        </table>
+    </section>
+    <!-- Modal account lock -->
+    <div id="accountLockModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Konto sperren/entsperren</h4>
+          </div>
+          <div *ngIf="blockCandidate" class="modal-body">
+            <p>Möchten Sie das Konto #{{ blockCandidate.id }} wirklich {{ blockCandidate.active ? 'sperren' : 'entsperren'}}?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="blockOrDeblock()">Ja</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!-- Modal roles -->
+    <div id="rolesModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Rollen hinzufügen/löschen</h4>
+          </div>
+          <div class="modal-body">
+                <p>Rolle auswählen:</p>
+                <select #selectedRole class="selectpicker" title="Rolle auswählen...">
+                    <ng-template ngFor let-role [ngForOf]="roleList">
+                        <option>{{ role.name }}</option>
+                    </ng-template>
+                </select>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="updateRole(selectedRole.value, true)">Hinzufügen</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="updateRole(selectedRole.value, false)">Löschen</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+</div>

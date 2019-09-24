@@ -1,0 +1,41 @@
+<div class="row panel panel-default component" style="background-color: #e5e5e5;">
+    <textarea *ngIf="editMode" class="panel-body col-lg-12" [(ngModel)]="plainContent"></textarea>
+    <h4 *ngIf="!editMode" class="panel-body" [innerHtml]="processedContent | safeHtml"></h4>
+    <footer class="panel-footer">Gepostet von <strong *ngIf="!self"><a [routerLink]="['/home/profil']" [queryParams]="{id: quack.authorId}">{{ quack.authorName }}</a></strong><span *ngIf="self">Ihnen</span><i *ngIf="!quack.authorActive"> (nicht aktiv)</i>
+        <span *ngIf="!self && quack.authorActive"> [
+            <a role="button" class="btn btn-xs" [ngClass]="{'btn-success' : !quack.authorFollowed, 'btn-warning': quack.authorFollowed}" (click)="toggleFollow()">{{ followOrUnfollow }}</a> - 
+            <a role="button" class="btn btn-xs btn-danger" (click)="block()">Blokieren</a> 
+            <span *ngIf="canBan && quack.authorActive">- <a role="button" class="btn btn-xs btn-danger" (click)="ban()">Konto sperren</a></span>
+            ]</span>
+        am {{ quack.postDate }} <i *ngIf="edited">(gerade aktualisiert)</i>
+        <select *ngIf="self" class="selectpicker pull-right" [(ngModel)]="selectedScope" (ngModelChange)="updateScope($event)">
+            <option>Alle</option>
+            <option>Follower</option>
+            <option>Privat</option>
+        </select>
+        <span *ngIf="!self" class="glyphicon pull-right" [ngClass]="{'glyphicon-globe':quack.scope == 2, 'glyphicon-user':quack.scope == 1, 'glyphicon-lock':quack.scope == 0}"></span>
+    </footer>
+    <footer class="panel-footer">
+        <div class="btn-group" role="group" aria-label="...">
+            <button *ngIf="self || (quack.authorFollowed && quack.scope != 0) || quack.scope == 2" type="button" class="btn btn-info" (click)="toggleLike()"><span class="glyphicon" [ngClass]="{'glyphicon-thumbs-up':!quack.liked, 'glyphicon-thumbs-down':quack.liked}"></span> <span class="badge">{{ quack.totalLikes }}</span></button>
+            <button *ngIf="self" type="button" class="btn" [ngClass]="{'btn-warning':!editMode, 'btn-success':editMode}" (click)="edit()"><span class="glyphicon" [ngClass]="{'glyphicon-edit':!editMode, 'glyphicon-ok':editMode}"></span></button>
+            <button *ngIf="self || canDelete" type="button" class="btn btn-danger" (click)="delete()"><span class="glyphicon glyphicon-trash"></span></button>
+        </div>
+        <button class="btn btn-primary pull-right" type="button" data-toggle="collapse" [attr.data-target]="'#showComments' + quack.id" aria-expanded="false" [attr.aria-controls]="'showComments' + quack.id" (click)="commentsButtonClicked()">
+            <span class="badge">{{ quack.commentsCount }}</span> Kommentare
+        </button>
+    </footer>
+    <div class="panel-footer collapse" [id]="'showComments' + quack.id">
+        <table class="table">
+            <ng-template ngFor let-comment [ngForOf]="quack.comments" [ngForTrackBy]="trackCommentById">
+                <tr><a role="button" *ngIf="ownComment(comment.authorId)" (click)="deleteComment(comment.id)"><span class="glyphicon glyphicon-remove comment-delete"></span></a><a [routerLink]="['/home/profil']" [queryParams]="{id: comment.authorId}">{{ comment.authorName }}</a>: {{ comment.content }}</tr>
+            </ng-template>
+            <tr *ngIf="quack.commentsCount == 0"><i>Dieses Quack hat zurzeit keine Kommentare.</i></tr>
+        </table>
+        <form class="form-horizontal" (ngSubmit) = "postComment()">
+            <div class="form-group" [ngClass]="{'has-error' : commentError}">
+                <input #commentField type="text" class="form-control" placeholder="Kommentar schreiben..." name="commentContent" [(ngModel)]="commentContent" maxlength="600">
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+<div class="component container">
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand">QuickQuack</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li [ngClass]="{'active': currentComponent == '/chronik'}"><a [routerLink]="['/home/chronik']" (click)="setChronik()">Chronik</a></li>
+                    <li [ngClass]="{'active': currentComponent == '/profil'}"><a [routerLink]="['/home/profil']" (click)="setProfil()">Profil</a></li>
+                    <li [ngClass]="{'active': currentComponent == '/admin'}"><a *ngIf="isAdmin" [routerLink]="['/home/admin']" (click)="setAdmin()">Administration</a></li>
+                </ul>
+                <form class="navbar-form navbar-left" (ngSubmit) = "search()">
+                    <div class="form-group" [ngClass]="{'has-error': searchError}">
+                         <input [(ngModel)]="searchValue" type="text" class="form-control" name="searchValue" placeholder="Suchen">
+                    </div>
+                    <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a><b>{{ alias }}</b></a></li>
+                    <li><a [routerLink]="['/login']">Abmelden</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <br><br><br>
+    <div *ngIf="aliasUpdated" class="alert alert-success alert-dismissable">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <span>Benutzername erfolgreich aktualisiert. Viel Spaß beim Quacken!</span>
+    </div>
+    <div *ngIf="welcome" class="row">
+        <div class="jumbotron col-lg-8 col-lg-offset-2">
+            <h1>Willkommen!</h1>
+            <p>Wählen Sie jetzt einen Benutzernamen:</p>
+            <form (ngSubmit)="updateAlias(username.value)">
+                <div class="form-group">
+                    <input #username type="text" class="form-control" id="username" placeholder="Benutzername" maxlength="45">
+                </div>
+                <div *ngIf="aliasUpdateError" class="alert alert-danger alert-dismissable">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <span>{{ aliasUpdateError }}</span>
+                </div>
+                <button class="btn btn-primary btn-lg" type="submit">Aktualisieren</button>
+                <button class="btn btn-default btn-lg" (click)="welcome = false;">Später</button>
+            </form>
+        </div>
+    </div>
+    <form *ngIf="!welcome && (currentComponent == '/chronik' || currentComponent == '/profil')" class="row form" (ngSubmit) = "postQuack()">
+        <div class="form-group row">
+            <div class="col-lg-6 col-lg-offset-3">
+                <textarea class="form-control" rows="3" placeholder="Was gibt's Neues?" [(ngModel)]="quackContent" name="quackContent" maxlength="1000" autofocus></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-lg-offset-3">
+                <button type="submit" class="btn btn-primary pull-right">Posten</button>
+                <div class="pull-right">
+                    <select class="form-control" [(ngModel)]="quackScope" name="quackScope">
+                        <option>Alle</option>
+                        <option>Follower</option>
+                        <option>Privat</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </form>
+    <br>
+
+    <router-outlet></router-outlet>
+</div>

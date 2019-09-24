@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <context-param>
+        <param-name>resteasy.scan</param-name>
+        <param-value>true</param-value>
+    </context-param>
+    <context-param>
+        <param-name>resteasy.servlet.mapping.prefix</param-name>
+        <param-value>/rest</param-value>
+    </context-param>
+    <filter>
+        <filter-name>ShiroFilter</filter-name>
+        <filter-class>org.apache.shiro.web.servlet.ShiroFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>CorsFilter</filter-name>
+        <filter-class>com.thetransactioncompany.cors.CORSFilter</filter-class>
+        <init-param>
+            <param-name>cors.allowGenericHttpRequests</param-name>
+            <param-value>true</param-value>
+        </init-param>
+                        
+        <init-param>
+            <param-name>cors.allowOrigin</param-name>
+            <param-value>*</param-value>
+        </init-param>
+                        
+        <init-param>
+            <param-name>cors.allowSubdomains</param-name>
+            <param-value>false</param-value>
+        </init-param>
+                        
+        <init-param>
+            <param-name>cors.supportedMethods</param-name>
+            <param-value>GET, HEAD, POST, OPTIONS, PUT, DELETE</param-value>
+        </init-param>
+                        
+        <init-param>
+            <param-name>cors.supportedHeaders</param-name>
+            <param-value>*</param-value>
+        </init-param>
+                        
+        <init-param>
+            <param-name>cors.exposedHeaders</param-name>
+            <param-value>X-Test-1, X-Test-2</param-value>
+        </init-param>
+                        
+        <init-param>
+            <param-name>cors.supportsCredentials</param-name>
+            <param-value>true</param-value>
+        </init-param>
+                        
+        <init-param>
+            <param-name>cors.maxAge</param-name>
+            <param-value>3600</param-value>
+        </init-param>
+    </filter>
+    <filter>
+        <filter-name>UserTransactionFilter</filter-name>
+        <filter-class>de.tudortmund.webtech2.quickquack.rest.filter.UserTransactionFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CorsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ShiroFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+        <dispatcher>ERROR</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>UserTransactionFilter</filter-name>
+        <url-pattern>/rest/quack</url-pattern>
+        <url-pattern>/rest/quack/get</url-pattern>
+        <url-pattern>/rest/quack/edit</url-pattern>
+        <url-pattern>/rest/quack/user</url-pattern>
+        <url-pattern>/rest/quack/search</url-pattern>
+        <url-pattern>/rest/quack/put</url-pattern>
+        <url-pattern>/rest/quack/like</url-pattern>
+        <url-pattern>/rest/quack/scope</url-pattern>
+        <url-pattern>/rest/quack/comment</url-pattern>
+        <url-pattern>/rest/user</url-pattern>
+        <url-pattern>/rest/user/get</url-pattern>
+        <url-pattern>/rest/user/find</url-pattern>
+        <url-pattern>/rest/user/follow</url-pattern>
+        <url-pattern>/rest/user/unfollow</url-pattern>
+        <url-pattern>/rest/user/login</url-pattern>
+        <url-pattern>/rest/user/loginJson</url-pattern>
+        <url-pattern>/rest/user/register</url-pattern>
+        <url-pattern>/rest/user/registerJson</url-pattern>
+        <url-pattern>/rest/user/block</url-pattern>
+        <url-pattern>/rest/user/followed</url-pattern>
+        <url-pattern>/rest/user/following</url-pattern>
+        <url-pattern>/rest/user/changePassword</url-pattern>
+        <url-pattern>/rest/user/changeAlias</url-pattern>
+        <url-pattern>/rest/admin/*</url-pattern>
+    </filter-mapping>
+    <listener>
+        <listener-class>org.apache.shiro.web.env.EnvironmentLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>
+            org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
+        </listener-class>
+    </listener>
+    <servlet>
+        <servlet-name>resteasy-servlet</servlet-name>
+        <servlet-class>
+            org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+        </servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>resteasy-servlet</servlet-name>
+        <url-pattern>/rest/*</url-pattern>
+    </servlet-mapping>
+</web-app>

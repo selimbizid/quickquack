@@ -1,0 +1,33 @@
+<div class="container component">
+    <div class="row">
+        <h2 *ngIf="!noResults">Suchergebnisse für '{{ searchValue }}':</h2>
+        <h2 *ngIf="noResults">Keine Ergebnisse für '{{ searchValue }}' gefunden.</h2><br>
+    </div>
+    <div *ngIf="!noResults && mode == 2" class="row">
+        <ng-template ngFor let-quack [ngForOf]="quacks" [ngForTrackBy]="trackQuackById" >
+            <quack *ngIf="!quack.authorBlocked" [quack]="quack"></quack>
+        </ng-template>
+    </div>
+    <div *ngIf="!noResults && mode == 1" class="row">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>eMail</th>
+                    <th>Benutzername</th>
+                    <th>Profil</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-template ngFor let-user [ngForOf]="users" [ngForTrackBy]="trackUserById" >
+                    <tr>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.alias }}</td>
+                        <td *ngIf="user.active"><a [routerLink]="['/home/profil']" [queryParams]="{id: user.id}">Anzeigen</a></td>
+                        <td *ngIf="!user.active"><i>Gesperrt</i></td>
+                    </tr>
+                </ng-template>
+            </tbody>
+        </table>
+    </div>
+    <button *ngIf="shouldLoad()" class="btn btn-default center-block" role="button" (click)="load()">Mehr laden...</button>
+</div>

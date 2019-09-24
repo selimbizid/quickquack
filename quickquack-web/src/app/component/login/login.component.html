@@ -1,0 +1,33 @@
+<div class="container component">
+    <div class="page-header">
+        <h1 class="center-block">QuickQuack</h1>
+    </div>
+    <div *ngIf="newUser" class="row alert alert-success alert-dismissable">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        Registrierung erfolgreich!
+    </div>
+    <div class="row">
+        <form class="form-horizontal" (ngSubmit) = "onSubmit()">
+            <legend>Anmelden</legend>
+            <div [class.has-error]="invalidEmail" class="form-group">
+                <label for="email" class="col-sm-2 control-label">eMail</label>
+                <div class="col-sm-10">
+                    <input type="text" id="email" class="form-control" [(ngModel)]="email" [ngModelOptions] = {standalone:true} pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required autofocus>
+                </div>
+            </div>
+            <div [class.has-error]="invalidPassword" class="form-group">
+                <label for="password" class="col-sm-2 control-label">Passwort</label>
+                <div class="col-sm-10">
+                    <input type="password" id="password" class="form-control" [(ngModel)]="password" [ngModelOptions] = {standalone:true} required>
+                </div>
+            </div>
+            <div class="form-group pull-right">
+                <button type="submit" class="btn btn-primary">Anmelden</button>
+                <a [routerLink]="['/register']" class="btn btn-link">Registrieren</a>
+            </div>
+        </form>
+    </div>
+    <div *ngIf="error" class="row row-buffer">
+        <p class="alert alert-danger">{{error}}</p>
+    </div>
+</div>

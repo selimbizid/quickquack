@@ -1,0 +1,100 @@
+<div *ngIf="u" class="container component">
+    <div class="row panel panel-primary">
+        <div class="panel-heading"><h3>Profil <small *ngIf="!u.active" style="color:white;"><i>(nicht aktiv)</i></small></h3></div>
+        <div class="panel-body">
+            <h4><b>Benutzername:</b> {{ u.alias }} <button *ngIf="self" class="btn btn-default btn-xs" data-toggle="modal" data-target="#usernameChangerModal"><span class="glyphicon glyphicon-edit"></span></button></h4><br>
+            <h4><b>eMail:</b> {{ u.email }}</h4><br>
+            <h4 *ngIf="u.lastestActivity"><b>Zuletzt aktiv am:</b> {{ u.lastestActivity }}</h4><br>
+            <div *ngIf="self">
+                <h4>Sie folgen <b>{{ u.followed }}</b> Benutzer(n)</h4><br>
+            </div>
+            <div *ngIf="!self">
+                <h4 >Dieser Benutzer folgt <b>{{ u.followed }}</b> Person(en)</h4><br>
+            </div>
+            <div *ngIf="self">
+                <h4>Sie werden von <b>{{ u.following }}</b> Benutzer(n) gefolgt</h4>
+            </div>
+            <div *ngIf="!self">
+                <h4>Dieser Benutzer wird von <b>{{ u.following }}</b> Person(en) gefolgt</h4>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <button *ngIf="!self" class="btn" [ngClass]="{'btn-success' : !u.followedFromSelf, 'btn-warning': u.followedFromSelf}" (click)="follow()">{{ followOrUnfollow }}</button>
+            <button *ngIf="!self" class="btn btn-danger pull-right" (click)="block()">{{ blockOrDeblock }}</button>
+            <button *ngIf="canBan" class="btn btn-danger pull-right" (click)="ban()">{{ banOrDeban }}</button>
+            <button *ngIf="self" class="btn btn-default" data-toggle="modal" data-target="#passwordChangerModal" (click)="passChangeErrorFlags = 0;">Passwort ändern</button>
+        </div>
+    </div>
+    <!-- Modal change username -->
+    <div id="usernameChangerModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Benutzername ändern</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-inline" (ngSubmit)="changeAlias(newUsername.value)">
+                        <div class="form-group">
+                            <label for="newUsername">Neuer Benutzername </label>
+                            <input #newUsername type="text" class="form-control" id="newUsername" name="currentAlias" value="{{ u.alias }}" maxlength="45">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Ändern</button>
+                    </form>
+                    <br *ngIf="!usernameChangeInfo">
+                    <div *ngIf="usernameChangeInfo">
+                        <br>
+                        <div class="alert" [ngClass]="{'alert-danger' : !usernameChanged, 'alert-success' : usernameChanged}">
+                             {{ usernameChangeInfo }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal change password -->
+<div id="passwordChangerModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Passwort ändern</h4>
+            </div>
+            <div class="modal-body">
+                <form (ngSubmit)="changePassword(oldPass.value, newPass.value, newPassConfirm.value)">
+                    <div class="form-group" [class.has-error]="checkFlag(1)">
+                        <label for="oldPass">Altes Passwort:</label>
+                        <input #oldPass type="password" class="form-control" id="oldPass" name="oldPass">
+                    </div>
+                    <div class="form-group" [class.has-error]="checkFlag(2)">
+                        <label for="newPass">Neues Passwort:</label>
+                        <input #newPass type="password" class="form-control" id="newPass" name="newPass">
+                    </div>
+                    <div class="form-group" [class.has-error]="checkFlag(4)">
+                        <label for="newPassConfirm">Neues Passwort bestätigen:</label>
+                        <input #newPassConfirm type="password" class="form-control" id="newPassConfirm" name="newPassConfirm">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Ändern</button>
+                </form>
+                <br *ngIf="!passwordChangeInfo">
+                <div *ngIf="passwordChangeInfo">
+                    <br>
+                    <div class="alert" [ngClass]="{'alert-danger' : !passwordChanged, 'alert-success' : passwordChanged}">
+                         {{ passwordChangeInfo }}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<br>
+<quack-list *ngIf="!u.blockedFromSelf" [id]="u.id"></quack-list>
+</div>

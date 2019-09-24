@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+    <persistence-unit name="QuickQuackPU" transaction-type="JTA">
+        <jta-data-source>java:/QuickQuackDS</jta-data-source>
+        <!--<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>-->
+        <properties>
+            <!--<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/quickquack" />
+            <property name="javax.persistence.jdbc.user" value="root" />
+            <property name="javax.persistence.jdbc.password" value="240192" />-->
+            <property name="hibernate.show_sql" value="false" />
+            <property name="hibernate.format_sql" value="false" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+            <property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="jadira.usertype.autoRegisterUserTypes" value="true"/>
+        </properties>
+        <class>de.tudortmund.webtech2.quickquack.ejb.entity.User</class>
+        <class>de.tudortmund.webtech2.quickquack.ejb.entity.Quack</class>
+        <class>de.tudortmund.webtech2.quickquack.ejb.entity.Comment</class>
+        <class>de.tudortmund.webtech2.quickquack.ejb.entity.Hashtag</class>
+        <class>de.tudortmund.webtech2.quickquack.ejb.entity.Role</class>
+        <class>de.tudortmund.webtech2.quickquack.ejb.entity.Permission</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    </persistence-unit>
+</persistence>

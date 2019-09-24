@@ -1,0 +1,6 @@
+<div class="row container component">
+    <ng-template ngFor let-quack [ngForOf]="quacks" [ngForTrackBy]="trackById" >
+            <quack *ngIf="!quack.authorBlocked" [quack]="quack"></quack>
+    </ng-template>
+    <button *ngIf="shouldLoad" class="btn btn-default center-block" role="button" (click)="loadQuacks()">Mehr laden...</button>
+</div>
