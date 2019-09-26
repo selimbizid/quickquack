@@ -1,6 +1,6 @@
-University Project<br>
-Webtech-2 Module<br>
-TU Dortmund<br>
+<h3>University Project</h3><br>
+<h4>Webtech-2 Module</h4><br>
+<h4>TU Dortmund</h4><br>
 
 How to deploy:<br>
 
